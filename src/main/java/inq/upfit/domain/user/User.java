@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "users")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
