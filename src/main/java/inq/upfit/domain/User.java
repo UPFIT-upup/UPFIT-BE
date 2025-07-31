@@ -1,19 +1,22 @@
 package inq.upfit.domain;
 
 
-
+import inq.upfit.domain.assignment.Assignment;
+import inq.upfit.domain.assignment.UserAssignment;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -35,7 +38,6 @@ public class User {
     @Column(nullable = false)
     private SystemRole systemRole;
 
-
     @Column
     private Integer level;
 
@@ -45,16 +47,20 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserCompany> userCompanies;
 
-
-    /** JWT Refresh Token (optional) */
+    /**
+     * JWT Refresh Token (optional)
+     */
     @Column(length = 512)
     private String refreshToken;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserInfo userInfo;
 
+    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+    private List<Assignment> createdAssignments = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "assignee", fetch = FetchType.LAZY)
+    private List<UserAssignment> assignedAssignments = new ArrayList<>();
 }
 
 

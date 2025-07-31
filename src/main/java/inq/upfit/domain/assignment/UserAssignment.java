@@ -1,6 +1,6 @@
 package inq.upfit.domain.assignment;
 
-import inq.upfit.domain.user.User;
+import inq.upfit.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
