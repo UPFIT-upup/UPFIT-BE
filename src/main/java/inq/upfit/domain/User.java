@@ -5,6 +5,7 @@ package inq.upfit.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name="users")
 public class User {
 
     @Id
@@ -22,37 +24,37 @@ public class User {
     private LocalDateTime registerAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private Provider provider;
 
+    //카카오 아이디가 있어도, 새로 회원가입 가능함.
     @Column(name = "kakao_id", nullable = false)
     private String kakaoId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private SystemRole systemRole;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Grade grade;
 
-    @Column(length = 30, nullable = false)
-    private String name;
-
-    @Column(name = "tel_no", length = 20, nullable = false)
-    private String telNo;
-
-    @Column(length = 100, nullable = false)
-    private String email;
-
-    @Column(name = "join_date", nullable = false)
-    private LocalDateTime joinDate;
-
-    @Column(nullable = false)
+    @Column
     private Integer level;
 
-    @Column(nullable = false)
+    @Column
     private Long exp;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserCompany> userCompanies;
+
+
+    /** JWT Refresh Token (optional) */
+    @Column(length = 512)
+    private String refreshToken;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UserInfo userInfo;
+
+
+
 }
 
 
