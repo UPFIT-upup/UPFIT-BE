@@ -47,7 +47,8 @@ dependencies {
     //env
     implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 
-
+    //docker devtools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') {
