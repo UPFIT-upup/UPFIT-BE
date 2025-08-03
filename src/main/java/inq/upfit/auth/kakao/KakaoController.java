@@ -18,7 +18,7 @@ public class KakaoController {
 
     private final KaKaoService kakaoService;
 
-    @Operation(summary = "카카오 로그인 처리", description = "카카오 인가코드를 받아 로그인 또는 계정 선택")
+    @Operation(summary = "카카오 로그인 처리", description = "카카오 인가코드를 받아 로그인 또는 계정 선택(소셜 회원가입 클릭 시에도 해당 엔드포인트)")
     @GetMapping("/login")
     public ResponseEntity<?> kakaoLogin(@RequestParam("code") String code) {
         return ResponseEntity.ok(kakaoService.handleKakaoLogin(code));
