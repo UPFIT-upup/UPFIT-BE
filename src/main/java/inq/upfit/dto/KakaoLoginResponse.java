@@ -20,6 +20,7 @@ public class KakaoLoginResponse {
     @Schema(description = "JWT 토큰 정보(가입된 사용자만 소유)")
     private TokenDto tokenDto;
 
+    //계정과 함께 소속된 회사도 리턴하여 프론트에 전달
     @Schema(description = "회사명")
     private Company company;
 
