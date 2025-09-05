@@ -1,8 +1,6 @@
 package inq.upfit.auth.kakao;
 
-import inq.upfit.dto.KakaoLoginResponse;
-import inq.upfit.dto.MemberSignupRequest;
-import inq.upfit.dto.OwnerSignupRequest;
+import inq.upfit.dto.SignupRequest;
 import inq.upfit.dto.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,24 +16,27 @@ public class KakaoController {
 
     private final KaKaoService kakaoService;
 
-    @Operation(summary = "카카오 로그인 처리", description = "카카오 인가코드를 받아 로그인 또는 계정 선택")
+
+    //로그인 완료 시 액세스 토큰 및 isadmin 리턴
+
+    @Operation(summary = "카카오 로그인 처리", description = "카카오 인가코드를 받아 로그인")
     @GetMapping("/login")
     public ResponseEntity<?> kakaoLogin(@RequestParam("code") String code) {
         return ResponseEntity.ok(kakaoService.handleKakaoLogin(code));
     }
 
-    @Operation(summary = "대표 회원가입", description = "회사 대표가 회원가입을 진행합니다.")
-    @PostMapping("/signup/owner")
-    public ResponseEntity<TokenDto> signupOwner(@RequestBody OwnerSignupRequest request) {
-        TokenDto token = kakaoService.signupOwner(request);
+    //회원가입 처리 시 isadmin 반환하는 api
+    @Operation(summary = "회원가입", description = "회사 대표가 회원가입을 진행합니다.")
+    @PostMapping("/signup")
+    public ResponseEntity<TokenDto> signupOwner(@RequestBody SignupRequest request) {
+        TokenDto token = kakaoService.signup(request);
         return ResponseEntity.ok(token);
     }
 
-    @Operation(summary = "일반 멤버 회원가입", description = "회사에 소속된 일반 멤버가 회원가입을 진행합니다.")
-    @PostMapping("/signup/member")
-    public ResponseEntity<TokenDto> signupMember(@RequestBody MemberSignupRequest request) {
-        TokenDto token = kakaoService.signupMember(request);
-        return ResponseEntity.ok(token);
+    @Operation(summary = "JWT 재발급", description = "Refresh Token을 이용해 Access Token 재발급")
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenDto> refresh(@RequestParam("refreshToken") String refreshToken) {
+        return ResponseEntity.ok(kakaoAuthService.refreshToken(refreshToken));
     }
 
 

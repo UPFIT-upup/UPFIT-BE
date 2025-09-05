@@ -2,7 +2,7 @@ package inq.upfit.auth.jwt;
 
 
 import inq.upfit.auth.utils.UserDetailsImpl;
-import inq.upfit.domain.User;
+import inq.upfit.domain.master.User;
 import inq.upfit.dto.TokenDto;
 import inq.upfit.repository.UserRepository;
 
@@ -16,7 +16,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.security.AuthProvider;
 import java.security.Key;
 
 import java.util.Date;
@@ -50,7 +49,7 @@ public class JwtProvider {
         this.userRepository = userRepository;
     }
 
-    //authenticationr객체를 기반으로 jwtTokenDto 생성
+    //authentication 객체를 기반으로 jwtTokenDto 생성
     public TokenDto generateTokenDto(Authentication authentication){
         String authorities= authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -62,7 +61,7 @@ public class JwtProvider {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_VALIDITY_SECONDS);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())         // payload "sub": "kakaoId"
-                .claim(ROLES_CLAIM_KEY, authorities)          // payload "roles: "common"
+                .claim(ROLES_CLAIM_KEY, authorities)          // payload "roles: "NORMAL_USER"
                 .setExpiration(accessTokenExpiresIn)          // payload "exp": 151621022 (ex)
                 .signWith(key, SignatureAlgorithm.HS512)      // header  "alg": "HS512"
                 .compact();
@@ -88,7 +87,7 @@ public class JwtProvider {
 
         String id = claims.getSubject();
 
-        User user = userRepository.findByKakaoId(id)
+        User user = userRepository.findByKakaoEmail(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         UserDetailsImpl principal = new UserDetailsImpl(user);
