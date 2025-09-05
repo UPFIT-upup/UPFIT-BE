@@ -1,6 +1,6 @@
 package inq.upfit.repository;
 
-import inq.upfit.domain.Company;
+import inq.upfit.domain.master.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

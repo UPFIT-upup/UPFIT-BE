@@ -1,6 +1,6 @@
 package inq.upfit.auth.utils;
 
-import inq.upfit.domain.User;
+import inq.upfit.domain.master.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,20 +12,26 @@ public class UserDetailsImpl implements UserDetails {
     private final User user;
 
     public UserDetailsImpl(User user) {
+
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(() -> user.getSystemRole().name());
+        return Collections.singleton(() -> user.getRole().name());
+    }
+
+    public Long getId() {
+        return user.getId();
     }
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return null;
     }
+
     @Override
-    public String getUsername(){
-        return user.getKakaoId();
+    public String getUsername() {
+        return user.getKakaoEmail();
     }
 }
