@@ -1,6 +1,5 @@
 package inq.upfit.repository;
 
-import inq.upfit.domain.Role;
 import inq.upfit.domain.master.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,6 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByKakaoEmail(String kakaoEmail);
 
+    Optional<User> findByRefreshToken(String email);
 
-    List<User> findByRole(Role role);
 }

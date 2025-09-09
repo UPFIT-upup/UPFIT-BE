@@ -16,13 +16,5 @@ public class CompanyController {
 
     private final CompanyRepository companyRepository;
 
-    /*@GetMapping("/generate-code")
-    public ResponseEntity<String> generateUniqueCompanyCode() {
-        String code;
-        do {
-            code = UUID.randomUUID().toString().substring(0, 8);
-        } while (companyRepository.existsByUniqueCode(code));
 
-        return ResponseEntity.ok(code);
-    }*/
 }

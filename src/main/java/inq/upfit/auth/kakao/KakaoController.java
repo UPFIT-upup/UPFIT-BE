@@ -16,9 +16,6 @@ public class KakaoController {
 
     private final KaKaoService kakaoService;
 
-
-    //로그인 완료 시 액세스 토큰 및 isadmin 리턴
-
     @Operation(summary = "카카오 로그인 처리", description = "카카오 인가코드를 받아 로그인")
     @GetMapping("/login")
     public ResponseEntity<?> kakaoLogin(@RequestParam("code") String code) {
@@ -33,11 +30,11 @@ public class KakaoController {
         return ResponseEntity.ok(token);
     }
 
-   /* @Operation(summary = "JWT 재발급", description = "Refresh Token을 이용해 Access Token 재발급")
+    @Operation(summary = "JWT 재발급", description = "Refresh Token을 이용해 Access Token 재발급")
     @PostMapping("/refresh")
     public ResponseEntity<TokenDto> refresh(@RequestParam("refreshToken") String refreshToken) {
-        return ResponseEntity.ok(kakaoAuthService.refreshToken(refreshToken));
-    }*/
+        return ResponseEntity.ok(kakaoService.refreshToken(refreshToken));
+    }
 
 
 
