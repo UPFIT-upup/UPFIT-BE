@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+/*
 @RestController
 @RequestMapping("/files")
 @RequiredArgsConstructor
@@ -28,12 +29,8 @@ public class SettingFileController {
         Long userId = userDetails.getId();
 
         // user가 속한 회사 중 company-owner 권한 회사 찾기
-        UserCompany userCompany = userCompanyRepository.findByUserIdAndCompanyRole(userId, "COMPANY-OWNER")
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("회사 관리자 권한이 필요합니다."));
 
-        Long companyId = userCompany.getCompany().getId();
+
 
         String fileUrl = fileService.uploadToStorage(file);
         fileService.saveFileUrl(companyId, fileUrl);
@@ -42,3 +39,5 @@ public class SettingFileController {
     }
 }
 
+
+ */
