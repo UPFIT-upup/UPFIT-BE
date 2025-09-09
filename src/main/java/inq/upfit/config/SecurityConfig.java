@@ -2,6 +2,7 @@ package inq.upfit.config;
 
 import inq.upfit.auth.jwt.JwtFilter;
 import inq.upfit.auth.jwt.JwtProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +27,7 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/favicon.ico"
                         ).permitAll()
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
@@ -37,6 +39,12 @@ public class SecurityConfig {
                                 "/swagger-ui/index.html",
                                 "/swagger-resources/**",
                                 "/webjars/**"
+                        )
+                )
+                // 인증 실패 시 401 Unauthorized 반환
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
                         )
                 )
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)

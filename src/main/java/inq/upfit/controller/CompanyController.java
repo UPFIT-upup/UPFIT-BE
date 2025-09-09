@@ -16,7 +16,7 @@ public class CompanyController {
 
     private final CompanyRepository companyRepository;
 
-    @GetMapping("/generate-code")
+    /*@GetMapping("/generate-code")
     public ResponseEntity<String> generateUniqueCompanyCode() {
         String code;
         do {
@@ -24,5 +24,5 @@ public class CompanyController {
         } while (companyRepository.existsByUniqueCode(code));
 
         return ResponseEntity.ok(code);
-    }
+    }*/
 }

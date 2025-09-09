@@ -20,7 +20,7 @@ public class SettingFileController {
     private final SettingFileService fileService;
 
 
-    @PostMapping("/upload")
+    /*@PostMapping("/upload")
     public ResponseEntity<String> uploadFile(
             @RequestParam("file") MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -39,6 +39,6 @@ public class SettingFileController {
         fileService.saveFileUrl(companyId, fileUrl);
 
         return ResponseEntity.ok("File uploaded: " + fileUrl);
-    }
+    }*/
 }
 

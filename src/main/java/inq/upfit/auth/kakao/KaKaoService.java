@@ -8,7 +8,6 @@ import inq.upfit.domain.master.Company;
 import inq.upfit.domain.master.User;
 import inq.upfit.dto.*;
 import inq.upfit.repository.CompanyRepository;
-import inq.upfit.repository.UserInfoRepository;
 import inq.upfit.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +32,6 @@ public class KaKaoService {
 
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
-    private final UserInfoRepository userInfoRepository;
     private final JwtProvider jwtProvider;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();

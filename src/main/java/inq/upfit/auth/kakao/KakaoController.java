@@ -33,11 +33,11 @@ public class KakaoController {
         return ResponseEntity.ok(token);
     }
 
-    @Operation(summary = "JWT 재발급", description = "Refresh Token을 이용해 Access Token 재발급")
+   /* @Operation(summary = "JWT 재발급", description = "Refresh Token을 이용해 Access Token 재발급")
     @PostMapping("/refresh")
     public ResponseEntity<TokenDto> refresh(@RequestParam("refreshToken") String refreshToken) {
         return ResponseEntity.ok(kakaoAuthService.refreshToken(refreshToken));
-    }
+    }*/
 
 
 
