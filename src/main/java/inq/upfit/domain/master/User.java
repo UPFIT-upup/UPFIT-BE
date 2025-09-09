@@ -35,7 +35,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
-    private Company company; // 한 유저는 하나의 팀에만 속할 수 있음
+    private Company company;
 
     @Column
     private Integer level;
@@ -47,6 +47,8 @@ public class User {
     /** JWT Refresh Token (optional) */
     @Column(length = 512)
     private String refreshToken;
+
+
 
 
 

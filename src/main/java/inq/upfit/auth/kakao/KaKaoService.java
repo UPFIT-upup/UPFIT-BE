@@ -4,11 +4,9 @@ package inq.upfit.auth.kakao;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inq.upfit.auth.jwt.JwtProvider;
-import inq.upfit.domain.master.Company;
 import inq.upfit.domain.master.User;
 import inq.upfit.dto.*;
 import inq.upfit.repository.CompanyRepository;
-import inq.upfit.repository.UserInfoRepository;
 import inq.upfit.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +21,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -33,7 +30,6 @@ public class KaKaoService {
 
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
-    private final UserInfoRepository userInfoRepository;
     private final JwtProvider jwtProvider;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -127,6 +123,7 @@ public class KaKaoService {
         }
     }
 
+
     public String getKakaoEmail(String token) {
         String url = "https://kapi.kakao.com/v2/user/me";
         HttpHeaders headers = new HttpHeaders();
@@ -168,6 +165,17 @@ public class KaKaoService {
         }
     }
 
+
+    public TokenDto refreshToken(String refreshToken) {
+        User user = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 리프레시 토큰입니다."));
+
+        TokenDto token = generateToken(user);
+        user.setRefreshToken(token.getRefreshToken());
+        userRepository.save(user);
+
+        return token;
+    }
 
 
 

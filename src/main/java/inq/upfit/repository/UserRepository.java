@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByKakaoEmail(String kakaoEmail);
 
+    Optional<User> findByRefreshToken(String email);
+
 }
