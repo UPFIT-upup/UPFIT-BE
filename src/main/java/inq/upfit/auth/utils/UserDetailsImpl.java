@@ -21,6 +21,10 @@ public class UserDetailsImpl implements UserDetails {
         return Collections.singleton(() -> user.getRole().name());
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public Long getId() {
         return user.getId();
     }
