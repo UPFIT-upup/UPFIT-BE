@@ -19,17 +19,7 @@ public class KakaoController {
 
     private final KaKaoService kakaoService;
 
-    //카카오 로그인 후 테스팅용 컨트롤러
-    @GetMapping("/test")
 
-
-        public String getCurrentUser(@AuthenticationPrincipal UserDetailsImpl user) {
-            if (user == null) {
-                return "인증된 사용자가 없습니다.";
-            }
-            return "현재 로그인한 사용자: " + user.getUsername() +
-                    " / 권한: " + user.getAuthorities();
-        }
 
 
 
