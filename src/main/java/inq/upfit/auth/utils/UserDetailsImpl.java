@@ -18,11 +18,13 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         return Collections.singleton(() -> "ROLE_" + user.getRole().name());
     }
 
     public User getUser() {
         return user;
+
     }
 
     public Long getId() {

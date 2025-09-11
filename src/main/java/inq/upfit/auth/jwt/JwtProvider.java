@@ -61,7 +61,7 @@ public class JwtProvider {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_VALIDITY_SECONDS);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())         // payload "sub": "kakaoId"
-                .claim(ROLES_CLAIM_KEY, authorities)          // payload "roles: "NORMAL_USER"
+                .claim(ROLES_CLAIM_KEY, authorities)          // payload "roles: "ADMIN"
                 .setExpiration(accessTokenExpiresIn)          // payload "exp": 151621022 (ex)
                 .signWith(key, SignatureAlgorithm.HS512)      // header  "alg": "HS512"
                 .compact();
