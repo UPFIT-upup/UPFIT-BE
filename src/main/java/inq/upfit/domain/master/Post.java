@@ -36,7 +36,7 @@ public class Post {
 
     @NotNull
     @Column(name = "HIT", nullable = false)
-    private int hit;
+    private int hit=0;
 
     @NotNull
     @Enumerated(EnumType.STRING)

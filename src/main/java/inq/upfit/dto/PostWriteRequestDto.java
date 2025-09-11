@@ -26,7 +26,6 @@ public class PostWriteRequestDto {
     private String attachment;
 
     @NotNull(message = "카테고리는 필수 입력 값입니다.")
-    @Enumerated(EnumType.STRING)
     private PostCategory category;
 
     @NotNull(message = "부서 ID는 필수 선택 값입니다.")

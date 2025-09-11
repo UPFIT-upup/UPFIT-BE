@@ -35,15 +35,6 @@ public class PostService {
 
         Post savedPost = postRepository.save(post);
 
-        return PostResponseDto.builder()
-                .id(savedPost.getId())
-                .title(savedPost.getTitle())
-                .content(savedPost.getContent())
-                .category(savedPost.getCategory())
-                .writerName(writer.getName())
-                .departmentName(department.getDepartmentName())
-                .hit(savedPost.getHit())
-                .regDate(savedPost.getRegDate())
-                .build();
+        return PostResponseDto.from(savedPost);
     }
 }
