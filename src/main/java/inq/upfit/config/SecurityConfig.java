@@ -29,9 +29,13 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+
+               
+
                 // CSRF 완전히 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
                 // JWT 필터 적용
+
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 // 기본 폼 로그인 및 HTTP Basic 인증 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)

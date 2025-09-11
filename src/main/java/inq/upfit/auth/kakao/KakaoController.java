@@ -18,16 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class KakaoController {
 
     private final KaKaoService kakaoService;
-
-
-
-
-
-    // 🔍 code를 브라우저로 받기 위한 디버그 엔드포인트
+  
+     // 🔍 code를 브라우저로 받기 위한 디버그 엔드포인트
     @GetMapping("/kakao/test")
     public ResponseEntity<String> testCode(@RequestParam("code") String code) {
         return ResponseEntity.ok("받은 인가 코드: " + code);
     }
+
 
 
 
