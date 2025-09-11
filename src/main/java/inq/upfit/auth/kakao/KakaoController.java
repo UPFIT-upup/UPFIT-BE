@@ -16,6 +16,12 @@ public class KakaoController {
 
     private final KaKaoService kakaoService;
 
+    //code를 브라우저로 리턴
+    @GetMapping("/kakao/test")
+    public ResponseEntity<String> test(@RequestParam("code") String code) {
+        return ResponseEntity.ok(code);
+    }
+
     @Operation(summary = "카카오 로그인 처리", description = "카카오 인가코드를 받아 로그인")
     @GetMapping("/login")
     public ResponseEntity<?> kakaoLogin(@RequestParam("code") String code) {
