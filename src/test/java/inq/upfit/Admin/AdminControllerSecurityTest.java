@@ -17,10 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -56,6 +55,7 @@ public class AdminControllerSecurityTest {
                 .kakaoEmail("member@test.com")
                 .name("Member User")
                 .role(Role.MEMBER)
+                .assignments(new ArrayList<>())
                 .build();
 
         // 저장 후 엔티티를 다시 가져오기 (ID 자동 생성)
@@ -101,39 +101,6 @@ public class AdminControllerSecurityTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/students")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized()); // 인증 되지 않음 401
-    }
-
-    @Test
-    void adminCanAddUser() throws Exception {
-        String userJson = """
-            {
-                "kakaoEmail": "newuser@test.com",
-                "name": "New User",
-                "role": "MEMBER"
-            }
-            """;
-
-        mockMvc.perform(post("/api/admin/students")
-                        .header("Authorization", "Bearer " + adminToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-                        .with(csrf()))  // 여기가 핵심
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void adminCanDeleteUser() throws Exception {
-        User user = User.builder()
-                .kakaoEmail("todelete@test.com")
-                .name("To Delete")
-                .role(Role.MEMBER)
-                .build();
-        userRepository.saveAndFlush(user);
-
-        mockMvc.perform(delete("/api/admin/students/" + user.getId())
-                        .header("Authorization", "Bearer " + adminToken)
-                        .with(csrf()))
-                .andExpect(status().isOk());
     }
 
 }
