@@ -1,6 +1,7 @@
 package inq.upfit.controller;
 
 import inq.upfit.domain.master.User;
+import inq.upfit.dto.UserDetailDto;
 import inq.upfit.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,12 @@ public class AdminController {
     @GetMapping
     public List<User> getUsers() {
         return adminService.getAllUsers();
+    }
+
+    // 학생 정보 세부 조회
+    @GetMapping("/{id}")
+    public UserDetailDto getUser(@PathVariable Long id) {
+        return adminService.getUserById(id);
     }
 
     // 학생 추가
