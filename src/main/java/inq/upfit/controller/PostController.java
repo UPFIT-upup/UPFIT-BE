@@ -31,13 +31,20 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-        public ResponseEntity<Void> deletePost(
-                @PathVariable Long postId,
-                @AuthenticationPrincipal UserDetailsImpl userDetails) {
-            // 서비스로 삭제 요청
-            postService.deletePost(postId, userDetails);
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // 서비스로 삭제 요청
+        postService.deletePost(postId, userDetails);
 
-            // 삭제 성공 시 204 No Content 반환
-            return ResponseEntity.noContent().build();
-        }
+        // 삭제 성공 시 204 No Content 반환
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
+        PostResponseDto response = postService.getPost(postId);
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -57,4 +57,12 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    @Transactional(readOnly = true)
+    public PostResponseDto getPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
+
+        return PostResponseDto.from(post); // DTO 변환
+    }
 }
