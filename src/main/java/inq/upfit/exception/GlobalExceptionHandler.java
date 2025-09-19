@@ -71,6 +71,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostNotFound(PostNotFoundException e) {
+      ErrorResponse response = ErrorResponse.builder()
+              .status(HttpStatus.NOT_FOUND.value())
+              .error("NOT_FOUND")
+              .message(e.getMessage())
+              .timestamp(LocalDateTime.now())
+              .build();
+
+      return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
         log.error("예상하지 못한 오류 발생: ", e);

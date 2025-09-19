@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -32,4 +29,15 @@ public class PostController {
         PostResponseDto newPostDto = postService.writePost(dto, userId);
         return new ResponseEntity<>(newPostDto, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{postId}")
+        public ResponseEntity<Void> deletePost(
+                @PathVariable Long postId,
+                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+            // 서비스로 삭제 요청
+            postService.deletePost(postId, userDetails);
+
+            // 삭제 성공 시 204 No Content 반환
+            return ResponseEntity.noContent().build();
+        }
 }
