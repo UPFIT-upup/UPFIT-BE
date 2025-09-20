@@ -1,12 +1,15 @@
 package inq.upfit.controller;
 
 import inq.upfit.auth.utils.UserDetailsImpl;
+import inq.upfit.dto.PostPagedResponseDto;
 import inq.upfit.dto.PostResponseDto;
 import inq.upfit.dto.PostWriteRequestDto;
 import inq.upfit.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,6 +47,17 @@ public class PostController {
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
         PostResponseDto response = postService.getPost(postId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<PostPagedResponseDto> getPosts(
+            @RequestParam(defaultValue = "ALL") String category,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "regDate,desc") String sort
+    ) {
+        PostPagedResponseDto response = postService.getPosts(category, sort, page, size);
         return ResponseEntity.ok(response);
     }
 
