@@ -1,7 +1,11 @@
 package inq.upfit.repository;
 
+import inq.upfit.domain.PostCategory;
 import inq.upfit.domain.master.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
+  Page<Post> findByCategory(PostCategory category, Pageable pageable);
 }

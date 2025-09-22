@@ -1,6 +1,7 @@
 package inq.upfit.controller;
 
 import inq.upfit.auth.utils.UserDetailsImpl;
+import inq.upfit.dto.PostPagedResponseDto;
 import inq.upfit.dto.PostResponseDto;
 import inq.upfit.dto.PostUpdateRequestDto;
 import inq.upfit.dto.PostWriteRequestDto;
@@ -59,6 +60,17 @@ public class PostController {
 
         return ResponseEntity.ok(updatedPost);
     }
+
+    @GetMapping
+        public ResponseEntity<PostPagedResponseDto> getPosts(
+                @RequestParam(defaultValue = "ALL") String category,
+                @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "10") int size,
+                @RequestParam(defaultValue = "regDate,desc") String sort
+        ) {
+            PostPagedResponseDto response = postService.getPosts(category, sort, page, size);
+            return ResponseEntity.ok(response);
+        }
 
 
 }
