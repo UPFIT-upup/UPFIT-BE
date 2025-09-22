@@ -33,6 +33,9 @@ public class Comment {
     @JoinColumn(name = "POST_ID", nullable = false)
     private Post post;
 
+    @Column(name = "ATTACHMENT", length = 1000)
+    private String attachment;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime regDate;
