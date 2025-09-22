@@ -1,5 +1,6 @@
 package inq.upfit.domain.master;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import inq.upfit.domain.PostCategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -72,4 +74,8 @@ public class Post {
         this.category = category;
         this.department = department;
     }
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // 무한 루프 방지
+    private List<Comment> comments;
 }
