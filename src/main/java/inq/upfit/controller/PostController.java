@@ -3,13 +3,12 @@ package inq.upfit.controller;
 import inq.upfit.auth.utils.UserDetailsImpl;
 import inq.upfit.dto.PostPagedResponseDto;
 import inq.upfit.dto.PostResponseDto;
+import inq.upfit.dto.PostUpdateRequestDto;
 import inq.upfit.dto.PostWriteRequestDto;
 import inq.upfit.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -50,15 +49,28 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<PostPagedResponseDto> getPosts(
-            @RequestParam(defaultValue = "ALL") String category,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "regDate,desc") String sort
-    ) {
-        PostPagedResponseDto response = postService.getPosts(category, sort, page, size);
-        return ResponseEntity.ok(response);
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> updatePost(
+            @PathVariable Long postId,
+            @Valid @RequestBody PostUpdateRequestDto dto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        Long userId = userDetails.getUser().getId();
+        PostResponseDto updatedPost = postService.updatePost(postId, dto, userId);
+
+        return ResponseEntity.ok(updatedPost);
     }
+
+    @GetMapping
+        public ResponseEntity<PostPagedResponseDto> getPosts(
+                @RequestParam(defaultValue = "ALL") String category,
+                @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "10") int size,
+                @RequestParam(defaultValue = "regDate,desc") String sort
+        ) {
+            PostPagedResponseDto response = postService.getPosts(category, sort, page, size);
+            return ResponseEntity.ok(response);
+        }
+
 
 }

@@ -7,7 +7,9 @@ import inq.upfit.domain.master.Department;
 import inq.upfit.domain.master.User;
 import inq.upfit.dto.PostPagedResponseDto;
 import inq.upfit.dto.PostResponseDto;
+import inq.upfit.dto.PostUpdateRequestDto;
 import inq.upfit.dto.PostWriteRequestDto;
+import inq.upfit.exception.DepartmentNotFoundException;
 import inq.upfit.exception.PostNotFoundException;
 import inq.upfit.exception.UnauthorizedException;
 import inq.upfit.exception.UserNotFoundException;
@@ -75,53 +77,76 @@ public class PostService {
         return PostResponseDto.from(post); // DTO 변환
     }
 
-    @Transactional(readOnly = true)
-    public PostPagedResponseDto getPosts(String category, String sort, int page, int size) {
+    @Transactional
+    public PostResponseDto updatePost(Long postId, PostUpdateRequestDto dto, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
-        // 정렬 화이트리스트
-        Set<String> allowedSortFields = Set.of("regDate", "hit", "likeCount");
-
-        // sort 처리
-        String[] sortParams = sort.split(",");
-        String sortField = sortParams[0];
-        if (!allowedSortFields.contains(sortField)) {
-            sortField = "regDate"; // 기본값
-        }
-        Sort.Direction direction = (sortParams.length > 1 && sortParams[1].equalsIgnoreCase("desc"))
-                ? Sort.Direction.DESC
-                : Sort.Direction.ASC;
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
-
-        // 카테고리 처리
-        PostCategory postCategory = null;
-        if (category != null && !category.equalsIgnoreCase("ALL")) {
-            try {
-                postCategory = PostCategory.valueOf(category.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                postCategory = null; // 존재하지 않으면 ALL로 처리
-            }
+        if (!currentUser.isAdmin() && !post.getWriter().getId().equals(currentUser.getId())) {
+            throw new UnauthorizedException("게시글 수정 권한이 없습니다.");
         }
 
-        Page<Post> postPage = (postCategory == null)
-                ? postRepository.findAll(pageable)
-                : postRepository.findByCategory(postCategory, pageable);
-
-        List<PostResponseDto> postDtos = postPage.getContent()
-                .stream()
-                .map(PostResponseDto::from)
-                .toList();
-
-        return PostPagedResponseDto.builder()
-                .posts(postDtos)
-                .page(postPage.getNumber())
-                .size(postPage.getSize())
-                .totalElements(postPage.getTotalElements())
-                .totalPages(postPage.getTotalPages())
-                .last(postPage.isLast())
-                .sortField(sortField)
-                .sortDirection(direction.name())
-                .category((postCategory != null) ? postCategory.name() : "ALL")
-                .build();
+        Department department;
+        if (!post.getDepartment().getDepartmentId().equals(dto.getDepartmentId())) {
+            department = departmentRepository.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new DepartmentNotFoundException("부서를 찾을 수 없습니다."));
+        } else {
+            department = post.getDepartment();
+        }
+        post.update(dto.getTitle(), dto.getContent(), dto.getAttachment(), dto.getCategory(), department);
+        Post savedPost = postRepository.save(post);
+        return PostResponseDto.from(savedPost);
     }
+
+    @Transactional(readOnly = true)
+        public PostPagedResponseDto getPosts(String category, String sort, int page, int size) {
+
+            // 정렬 화이트리스트
+            Set<String> allowedSortFields = Set.of("regDate", "hit", "likeCount");
+
+            // sort 처리
+            String[] sortParams = sort.split(",");
+            String sortField = sortParams[0];
+            if (!allowedSortFields.contains(sortField)) {
+                sortField = "regDate"; // 기본값
+            }
+            Sort.Direction direction = (sortParams.length > 1 && sortParams[1].equalsIgnoreCase("desc"))
+                    ? Sort.Direction.DESC
+                    : Sort.Direction.ASC;
+
+            Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
+
+            // 카테고리 처리
+            PostCategory postCategory = null;
+            if (category != null && !category.equalsIgnoreCase("ALL")) {
+                try {
+                    postCategory = PostCategory.valueOf(category.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    postCategory = null; // 존재하지 않으면 ALL로 처리
+                }
+            }
+
+            Page<Post> postPage = (postCategory == null)
+                    ? postRepository.findAll(pageable)
+                    : postRepository.findByCategory(postCategory, pageable);
+
+            List<PostResponseDto> postDtos = postPage.getContent()
+                    .stream()
+                    .map(PostResponseDto::from)
+                    .toList();
+
+            return PostPagedResponseDto.builder()
+                    .posts(postDtos)
+                    .page(postPage.getNumber())
+                    .size(postPage.getSize())
+                    .totalElements(postPage.getTotalElements())
+                    .totalPages(postPage.getTotalPages())
+                    .last(postPage.isLast())
+                    .sortField(sortField)
+                    .sortDirection(direction.name())
+                    .category((postCategory != null) ? postCategory.name() : "ALL")
+                    .build();
+        }
 }
