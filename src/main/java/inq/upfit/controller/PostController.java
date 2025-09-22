@@ -2,6 +2,7 @@ package inq.upfit.controller;
 
 import inq.upfit.auth.utils.UserDetailsImpl;
 import inq.upfit.dto.PostResponseDto;
+import inq.upfit.dto.PostUpdateRequestDto;
 import inq.upfit.dto.PostWriteRequestDto;
 import inq.upfit.service.PostService;
 import jakarta.validation.Valid;
@@ -31,13 +32,33 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-        public ResponseEntity<Void> deletePost(
-                @PathVariable Long postId,
-                @AuthenticationPrincipal UserDetailsImpl userDetails) {
-            // 서비스로 삭제 요청
-            postService.deletePost(postId, userDetails);
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // 서비스로 삭제 요청
+        postService.deletePost(postId, userDetails);
 
-            // 삭제 성공 시 204 No Content 반환
-            return ResponseEntity.noContent().build();
-        }
+        // 삭제 성공 시 204 No Content 반환
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
+        PostResponseDto response = postService.getPost(postId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> updatePost(
+            @PathVariable Long postId,
+            @Valid @RequestBody PostUpdateRequestDto dto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        Long userId = userDetails.getUser().getId();
+        PostResponseDto updatedPost = postService.updatePost(postId, dto, userId);
+
+        return ResponseEntity.ok(updatedPost);
+    }
+
+
 }

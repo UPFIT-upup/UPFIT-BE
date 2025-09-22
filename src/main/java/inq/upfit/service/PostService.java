@@ -5,7 +5,9 @@ import inq.upfit.domain.master.Post;
 import inq.upfit.domain.master.Department;
 import inq.upfit.domain.master.User;
 import inq.upfit.dto.PostResponseDto;
+import inq.upfit.dto.PostUpdateRequestDto;
 import inq.upfit.dto.PostWriteRequestDto;
+import inq.upfit.exception.DepartmentNotFoundException;
 import inq.upfit.exception.PostNotFoundException;
 import inq.upfit.exception.UnauthorizedException;
 import inq.upfit.exception.UserNotFoundException;
@@ -56,5 +58,36 @@ public class PostService {
         }
 
         postRepository.delete(post);
+    }
+
+    @Transactional(readOnly = true)
+    public PostResponseDto getPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
+
+        return PostResponseDto.from(post); // DTO 변환
+    }
+
+    @Transactional
+    public PostResponseDto updatePost(Long postId, PostUpdateRequestDto dto, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+
+        if (!currentUser.isAdmin() && !post.getWriter().getId().equals(currentUser.getId())) {
+            throw new UnauthorizedException("게시글 수정 권한이 없습니다.");
+        }
+
+        Department department;
+        if (!post.getDepartment().getDepartmentId().equals(dto.getDepartmentId())) {
+            department = departmentRepository.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new DepartmentNotFoundException("부서를 찾을 수 없습니다."));
+        } else {
+            department = post.getDepartment();
+        }
+        post.update(dto.getTitle(), dto.getContent(), dto.getAttachment(), dto.getCategory(), department);
+        Post savedPost = postRepository.save(post);
+        return PostResponseDto.from(savedPost);
     }
 }
