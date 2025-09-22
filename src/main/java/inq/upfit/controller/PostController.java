@@ -2,6 +2,7 @@ package inq.upfit.controller;
 
 import inq.upfit.auth.utils.UserDetailsImpl;
 import inq.upfit.dto.PostResponseDto;
+import inq.upfit.dto.PostUpdateRequestDto;
 import inq.upfit.dto.PostWriteRequestDto;
 import inq.upfit.service.PostService;
 import jakarta.validation.Valid;
@@ -46,5 +47,18 @@ public class PostController {
         PostResponseDto response = postService.getPost(postId);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> updatePost(
+            @PathVariable Long postId,
+            @Valid @RequestBody PostUpdateRequestDto dto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        Long userId = userDetails.getUser().getId();
+        PostResponseDto updatedPost = postService.updatePost(postId, dto, userId);
+
+        return ResponseEntity.ok(updatedPost);
+    }
+
 
 }
