@@ -16,7 +16,7 @@ public class SignupRequest {
     @Schema(description = "이름", example = "홍길동")
     private String name;
 
-    @Schema(description = "역할", example ="Admin")
+    @Schema(description = "역할", example ="ADMIN")
     private Role role;
 
 
