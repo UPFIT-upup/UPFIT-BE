@@ -3,6 +3,7 @@ package inq.upfit.controller;
 import inq.upfit.domain.master.User;
 import inq.upfit.dto.UserDetailDto;
 import inq.upfit.service.AdminService;
+import inq.upfit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+    private final UserService userService;
 
     // 학생 목록 조회
     @GetMapping
@@ -38,4 +40,9 @@ public class AdminController {
     public void deleteStudent(@PathVariable Long id) {
         adminService.deleteUser(id);
     }
+
+    // 같은 팀원 조회
+    @GetMapping("/{id}/team-members")
+    public List<UserDetailDto> getTeamMembers(@PathVariable Long id) { return userService.getTeamMembers(id); }
+
 }

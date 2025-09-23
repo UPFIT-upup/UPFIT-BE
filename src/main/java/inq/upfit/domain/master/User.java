@@ -39,6 +39,9 @@ public class User {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Column(name = "team_id")
+    private Long teamId;
+
     @Column
     private Integer level;
 

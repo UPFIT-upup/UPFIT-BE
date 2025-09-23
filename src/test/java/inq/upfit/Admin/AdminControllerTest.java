@@ -206,5 +206,47 @@ class AdminControllerTest {
                 .andExpect(jsonPath("$.progress").value(50.0));
     }
 
+    @Test
+    @DisplayName("관리자가 특정 학생의 같은 팀원 목록 조회 API 테스트")
+    void getTeamMembersByUserId() throws Exception {
+        // given - 같은 팀(100)에 속한 학생 3명 생성
+        User user1 = userRepository.saveAndFlush(User.builder()
+                .kakaoEmail("team1@test.com")
+                .name("Team Member 1")
+                .role(Role.MEMBER)
+                .teamId(100L)   // 같은 팀 ID
+                .assignments(new ArrayList<>())
+                .build());
+
+        User user2 = userRepository.saveAndFlush(User.builder()
+                .kakaoEmail("team2@test.com")
+                .name("Team Member 2")
+                .role(Role.MEMBER)
+                .teamId(100L)
+                .assignments(new ArrayList<>())
+                .build());
+
+        User user3 = userRepository.saveAndFlush(User.builder()
+                .kakaoEmail("team3@test.com")
+                .name("Team Member 3")
+                .role(Role.MEMBER)
+                .teamId(100L)
+                .assignments(new ArrayList<>())
+                .build());
+
+        // when & then - user1 기준으로 같은 팀원 조회
+        mockMvc.perform(get("/api/admin/students/" + user1.getId() + "/team-members")
+                        .header("Authorization", "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(3)) // 총 3명
+                .andExpect(jsonPath("$[?(@.name == 'Team Member 1')]").exists())
+                .andExpect(jsonPath("$[?(@.name == 'Team Member 2')]").exists())
+                .andExpect(jsonPath("$[?(@.name == 'Team Member 3')]").exists());
+
+    }
+
+
 
 }

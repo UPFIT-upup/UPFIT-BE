@@ -18,7 +18,7 @@ public class UserDetailDto {
     private Long userId;
     private String name;
     private double progress;
-    //private String status;
+
 
     private List<AssignmentDto> assignments;
 
