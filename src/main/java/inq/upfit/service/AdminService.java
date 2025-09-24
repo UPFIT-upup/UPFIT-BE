@@ -4,6 +4,7 @@ import inq.upfit.domain.Role;
 import inq.upfit.domain.master.Assignment;
 import inq.upfit.domain.master.User;
 import inq.upfit.dto.UserDetailDto;
+import inq.upfit.exception.UserNotFoundException;
 import inq.upfit.repository.AssignmentRepository;
 import inq.upfit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,11 @@ public class AdminService {
 
     public List<User> getAllUsers() {
         return userRepository.findByRole(Role.MEMBER);
-
     }
 
     public UserDetailDto getUserById(Long id) {
-        return userRepository.findById(id).map(UserDetailDto::from).orElse(null);
+        return userRepository.findById(id).map(UserDetailDto::from)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
     }
 
     public User addUser(User user) {
@@ -32,10 +33,16 @@ public class AdminService {
     }
 
     public void deleteUser(Long id) {
+        if(!userRepository.existsById(id)) {
+            throw new UserNotFoundException("Cannot delete. User not found with id " + id);
+        }
         userRepository.deleteById(id);
     }
 
     public List<Assignment> getAssignmentsByUserId(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException("Assignments cannot be fetched. User not found with id " + userId);
+        }
         return assignmentRepository.findByUserId(userId);
     }
 }

@@ -67,7 +67,7 @@ public class AdminControllerSecurityTest {
                 new UsernamePasswordAuthenticationToken(
                         adminUser.getKakaoEmail(),
                         null,
-                        List.of(new SimpleGrantedAuthority(adminUser.getRole().name()))
+                        List.of(new SimpleGrantedAuthority("ROLE_" + adminUser.getRole().name()))
                 )
         ).getAccessToken();
 
