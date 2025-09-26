@@ -20,7 +20,7 @@ public class CommentResponseDto {
         return  CommentResponseDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .attachment(comment.getPost().getAttachment())
+                .attachment(comment.getAttachment())
                 .writerName(comment.getWriter().getName())
                 .regDate(comment.getRegDate())
                 .modDate(comment.getModDate())
