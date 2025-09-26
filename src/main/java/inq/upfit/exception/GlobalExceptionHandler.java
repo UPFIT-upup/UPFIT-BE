@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handlePostNotFound(PostNotFoundException e) {
       ErrorResponse response = ErrorResponse.builder()
               .status(HttpStatus.NOT_FOUND.value())
-              .error("NOT_FOUND")
+              .error("POST_NOT_FOUND")
               .message(e.getMessage())
               .timestamp(LocalDateTime.now())
               .build();
@@ -93,5 +93,16 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
+        log.error("댓글을 찾을 수 없음: {}", e.getMessage());
+        ErrorResponse response = ErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("COMMENT_NOT_FOUND")
+                .message(e.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
