@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -77,5 +78,5 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore // 무한 루프 방지
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 }

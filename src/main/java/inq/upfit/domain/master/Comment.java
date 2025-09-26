@@ -19,10 +19,11 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CMNT_ID")
     private Long id;
 
     @NotNull
-    @Column(nullable = false, length = 500)
+    @Column(name = "CONTENT", nullable = false, length = 500)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,10 +38,11 @@ public class Comment {
     private String attachment;
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name = "REG_DATE", updatable = false)
     private LocalDateTime regDate;
 
     @LastModifiedDate
+    @Column(name = "MOD_DATE")
     private LocalDateTime modDate; // 댓글 수정 기능 시 필요
 
 
