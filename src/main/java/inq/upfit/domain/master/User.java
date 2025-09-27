@@ -3,7 +3,11 @@ package inq.upfit.domain.master;
 
 
 import inq.upfit.domain.Role;
+import inq.upfit.domain.assignment.Assignment;
+import inq.upfit.domain.assignment.AssignmentToUser;
+import inq.upfit.domain.assignment.Submit;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -48,10 +52,14 @@ public class User {
     @Column(length = 512)
     private String refreshToken;
 
+    @OneToMany(mappedBy = "user")
+    private List<Assignment> manageAssignments;
 
+    @OneToMany(mappedBy = "user")
+    private List<AssignmentToUser> assignmentsToUser;
 
-
-
+    @OneToMany(mappedBy = "user")
+    private List<Submit> submitList;
 }
 
 
