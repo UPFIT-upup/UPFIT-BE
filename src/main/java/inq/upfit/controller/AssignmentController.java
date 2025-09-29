@@ -6,21 +6,27 @@ import inq.upfit.dto.AssignmentResponse;
 import inq.upfit.service.AssignmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@RequestMapping("/api/admin/assignments")
 @RequiredArgsConstructor
 @RestController
 public class AssignmentController {
     private final AssignmentService assignmentService;
 
-    @PostMapping("/api/admin/assignments")
+    @PostMapping
     public ResponseEntity<AssignmentResponse> createAssignment(
             Long adminId,
             @RequestBody AssignmentCreateRequest createRequest
     ) {
         Assignment assignment = assignmentService.createAssignment(adminId, createRequest);
+
+        return ResponseEntity.ok(AssignmentResponse.fromAssignment(assignment));
+    }
+
+    @GetMapping("/{assignmentId}")
+    public ResponseEntity<AssignmentResponse> getAssignment(@PathVariable Long assignmentId) {
+        Assignment assignment = assignmentService.findAssignment(assignmentId);
 
         return ResponseEntity.ok(AssignmentResponse.fromAssignment(assignment));
     }

@@ -27,4 +27,9 @@ public class AssignmentService {
 
         return assignmentRepository.save(assignment);
     }
+
+    public Assignment findAssignment(Long assignmentId) {
+        return assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new RuntimeException("Assignment not found"));
+    }
 }
