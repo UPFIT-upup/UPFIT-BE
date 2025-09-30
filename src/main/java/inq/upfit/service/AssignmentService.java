@@ -41,4 +41,8 @@ public class AssignmentService {
         assignment.update(updateRequest);
         return assignmentRepository.save(assignment);
     }
+
+    public void delete(Long assignmentId) {
+        assignmentRepository.deleteById(assignmentId);
+    }
 }
