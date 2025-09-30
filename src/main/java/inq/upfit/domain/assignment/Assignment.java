@@ -1,17 +1,13 @@
 package inq.upfit.domain.assignment;
 
 import inq.upfit.domain.master.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import inq.upfit.dto.AssignmentCreateRequest;
+import inq.upfit.dto.AssignmentUpdateRequest;
+import jakarta.persistence.*;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.Getter;
 
 @Entity
 @Getter
@@ -37,9 +33,37 @@ public class Assignment {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User admin;
 
-    @OneToMany(mappedBy = "assignment")
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
     private List<AssignmentToUser> assignmentsToUser;
 
-    @OneToMany(mappedBy = "assignment")
-    private List<AssignmentInfo> assignmentsInfo;
+    @OneToOne(mappedBy = "assignment", cascade = CascadeType.ALL)
+    private AssignmentInfo assignmentsInfo;
+
+    public static Assignment of(User admin, AssignmentCreateRequest createRequest) {
+        Assignment assignment = new Assignment();
+
+        assignment.type = createRequest.assignmentType();
+        assignment.submitType = createRequest.submitType();
+
+        assignment.uploadTime = LocalDateTime.now();
+
+        assignment.startTime = createRequest.startTime();
+        assignment.endTime = createRequest.endTime();
+
+        assignment.admin = admin;
+
+        return assignment;
+    }
+
+    public void addAssignmentInfo(AssignmentInfo assignmentInfo) {
+        this.assignmentsInfo = assignmentInfo;
+    }
+
+    public void update(AssignmentUpdateRequest updateRequest) {
+        this.type = updateRequest.type();
+        this.submitType = updateRequest.submitType();
+        this.admin = updateRequest.admin();
+
+        assignmentsInfo.update(updateRequest);
+    }
 }

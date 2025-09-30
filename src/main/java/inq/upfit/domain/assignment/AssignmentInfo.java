@@ -1,13 +1,9 @@
 package inq.upfit.domain.assignment;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import inq.upfit.dto.AssignmentCreateRequest;
+import inq.upfit.dto.AssignmentUpdateRequest;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
@@ -30,8 +26,30 @@ public class AssignmentInfo {
     private String answer;
 
     //과제 연관관계 매핑 필요
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "ASSIGNMENT_ID", nullable = false)
     private Assignment assignment;
 
+    public static AssignmentInfo of(AssignmentCreateRequest createRequest) {
+        AssignmentInfo assignmentInfo = new AssignmentInfo();
+
+        assignmentInfo.difficulty = createRequest.difficulty();
+        assignmentInfo.title = createRequest.title();
+        assignmentInfo.content = createRequest.content();
+        assignmentInfo.fileAddress = createRequest.fileAddress();
+
+        return assignmentInfo;
+    }
+
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
+        assignment.addAssignmentInfo(this);
+    }
+
+    public void update(AssignmentUpdateRequest updateRequest) {
+        this.difficulty = updateRequest.difficulty();
+        this.title = updateRequest.title();
+        this.content = updateRequest.content();
+        this.fileAddress = updateRequest.fileAddress();
+    }
 }
