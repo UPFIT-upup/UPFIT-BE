@@ -2,6 +2,7 @@ package inq.upfit.domain.assignment;
 
 import inq.upfit.domain.master.User;
 import inq.upfit.dto.AssignmentCreateRequest;
+import inq.upfit.dto.AssignmentUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -35,8 +36,8 @@ public class Assignment {
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
     private List<AssignmentToUser> assignmentsToUser;
 
-    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
-    private List<AssignmentInfo> assignmentsInfo;
+    @OneToOne(mappedBy = "assignment", cascade = CascadeType.ALL)
+    private AssignmentInfo assignmentsInfo;
 
     public static Assignment of(User admin, AssignmentCreateRequest createRequest) {
         Assignment assignment = new Assignment();
@@ -55,6 +56,14 @@ public class Assignment {
     }
 
     public void addAssignmentInfo(AssignmentInfo assignmentInfo) {
-        assignmentsInfo.add(assignmentInfo);
+        this.assignmentsInfo = assignmentInfo;
+    }
+
+    public void update(AssignmentUpdateRequest updateRequest) {
+        this.type = updateRequest.type();
+        this.submitType = updateRequest.submitType();
+        this.admin = updateRequest.admin();
+
+        assignmentsInfo.update(updateRequest);
     }
 }

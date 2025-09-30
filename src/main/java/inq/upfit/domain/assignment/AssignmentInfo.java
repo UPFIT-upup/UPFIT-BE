@@ -2,6 +2,7 @@ package inq.upfit.domain.assignment;
 
 
 import inq.upfit.dto.AssignmentCreateRequest;
+import inq.upfit.dto.AssignmentUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -25,7 +26,7 @@ public class AssignmentInfo {
     private String answer;
 
     //과제 연관관계 매핑 필요
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "ASSIGNMENT_ID", nullable = false)
     private Assignment assignment;
 
@@ -43,5 +44,12 @@ public class AssignmentInfo {
     public void setAssignment(Assignment assignment) {
         this.assignment = assignment;
         assignment.addAssignmentInfo(this);
+    }
+
+    public void update(AssignmentUpdateRequest updateRequest) {
+        this.difficulty = updateRequest.difficulty();
+        this.title = updateRequest.title();
+        this.content = updateRequest.content();
+        this.fileAddress = updateRequest.fileAddress();
     }
 }

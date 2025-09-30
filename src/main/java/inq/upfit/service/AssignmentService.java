@@ -4,6 +4,7 @@ import inq.upfit.domain.assignment.Assignment;
 import inq.upfit.domain.assignment.AssignmentInfo;
 import inq.upfit.domain.master.User;
 import inq.upfit.dto.AssignmentCreateRequest;
+import inq.upfit.dto.AssignmentUpdateRequest;
 import inq.upfit.repository.AssignmentRepository;
 import inq.upfit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,13 @@ public class AssignmentService {
     public Assignment findAssignment(Long assignmentId) {
         return assignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new RuntimeException("Assignment not found"));
+    }
+
+    public Assignment updateAssignment(Long assignmentId, AssignmentUpdateRequest updateRequest) {
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new RuntimeException("Assignment not found"));
+
+        assignment.update(updateRequest);
+        return assignmentRepository.save(assignment);
     }
 }
