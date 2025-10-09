@@ -32,6 +32,30 @@ public class AdminService {
         return userRepository.save(user);
     }
 
+    public User updateUserPartial(Long id, UserDetailDto dto) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
+
+        // ⚙️ 필요한 필드만 업데이트 (null 체크 포함)
+        if (dto.getName() != null) {
+            existingUser.setName(dto.getName());
+        }
+        if (dto.getRole() != null) {
+            existingUser.setRole(dto.getRole());
+        }
+        if (dto.getTeamId() != null) {
+            existingUser.setTeamId(dto.getTeamId());
+        }
+        if (dto.getLevel() != null) {
+            existingUser.setLevel(dto.getLevel());
+        }
+        if (dto.getExp() != null) {
+            existingUser.setExp(dto.getExp());
+        }
+        return userRepository.save(existingUser);
+    }
+
+
     public void deleteUser(Long id) {
         if(!userRepository.existsById(id)) {
             throw new UserNotFoundException("Cannot delete. User not found with id " + id);

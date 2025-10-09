@@ -1,11 +1,9 @@
 package inq.upfit.dto;
 
+import inq.upfit.domain.Role;
 import inq.upfit.domain.master.Assignment;
 import inq.upfit.domain.master.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class UserDetailDto {
-    private Long userId;
     private String name;
+    private Role role;
+    private Long teamId;
+    private Integer level;
+    private Long exp;
     private double progress;
 
 
@@ -31,9 +33,12 @@ public class UserDetailDto {
         }
 
         return UserDetailDto.builder()
-                .userId(user.getId())
                 .name(user.getName())
+                .role(user.getRole())
                 .assignments(assignmentDtos)
+                .teamId(user.getTeamId())
+                .level(user.getLevel())
+                .exp(user.getExp())
                 .progress(progress)
                 .build();
     }

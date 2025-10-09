@@ -78,23 +78,32 @@ class AdminControllerTest {
     }
 
     @Test
-    @DisplayName("학생 추가 API 테스트")
-    void addUser() throws Exception {
-        String userJson = """
-            {
-                "kakaoEmail": "newuser@test.com",
-                "name": "New User",
-                "role": "MEMBER"
-                }
-            """;
+    @DisplayName("학생 정보 수정 API 테스트")
+    void updateUser() throws Exception {
+        // given
+        Long userId = 1L; // 테스트용 학생 ID
+        String updateJson = """
+        {
+            "name": "Updated User",
+            "teamId": 3,
+            "level": 7,
+            "exp": 5000
+        }
+        """;
 
-        mockMvc.perform(post("/api/admin/students")
+        // when & then
+        mockMvc.perform(patch("/api/admin/students/{id}", userId)
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                        .content(updateJson)
                         .with(csrf()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated User"))
+                .andExpect(jsonPath("$.teamId").value(3))
+                .andExpect(jsonPath("$.level").value(7))
+                .andExpect(jsonPath("$.exp").value(5000));
     }
+
 
     @Test
     @DisplayName("학생 삭제 API 테스트")

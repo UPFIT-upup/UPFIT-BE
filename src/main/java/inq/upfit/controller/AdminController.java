@@ -29,10 +29,10 @@ public class AdminController {
         return adminService.getUserById(id);
     }
 
-    // 학생 추가
-    @PostMapping
-    public User addUser(@RequestBody User user) {
-        return adminService.addUser(user);
+    // 학생 정보 수정
+    @PatchMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody UserDetailDto dto) {
+        return adminService.updateUserPartial(id, dto);
     }
 
     // 학생 삭제

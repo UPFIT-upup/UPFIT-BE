@@ -48,6 +48,13 @@ public class User {
     @Column
     private Long exp;
 
+    @PrePersist
+    public void prePersist() {
+        if (level == null) level = 1;
+        if (exp == null) exp = 0L;
+    }
+
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     @Builder.Default
     private List<Assignment> assignments = new ArrayList<>();
