@@ -38,6 +38,6 @@ public class SettingFileController {
         return ResponseEntity.ok("File uploaded: " + fileUrl);
     }
 }
+*/
 
 
- */

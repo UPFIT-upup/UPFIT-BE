@@ -42,10 +42,22 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
+        log.error("로그인 정보 없음: {}", e.getMessage());
+        ErrorResponse response = ErrorResponse.builder()
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .error("UNAUTHORIZED")
+                .message(e.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException e) {
         log.error("권한 없음: {}", e.getMessage());
         ErrorResponse response = ErrorResponse.builder()
                 .status(HttpStatus.FORBIDDEN.value())
-                .error("UNAUTHORIZED")
+                .error("FORBIDDEN")
                 .message(e.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
